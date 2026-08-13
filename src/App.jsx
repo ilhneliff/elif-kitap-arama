@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import KitapListesi from './components/KitapListesi.jsx'
 import './App.css'
+import AramaKutusu from './components/AramaKutusu.jsx'
 
 function App() {
   const [kitaplar, setKitaplar] = useState([])
@@ -26,6 +27,7 @@ function App() {
     <>
       <section id="center">
         <div className="Liste">
+          <AramaKutusu />
           <KitapListesi kitaplar={kitaplar} yukleniyor={yukleniyor} />
         </div>
       </section>
