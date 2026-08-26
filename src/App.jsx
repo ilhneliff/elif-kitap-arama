@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import KitapListesi from './components/KitapListesi.jsx'
 import './App.css'
 import AramaKutusu from './components/AramaKutusu.jsx'
+import KitapArama from './components/KitapArama.jsx'
+import AramaFormu from './components/AramaFormu.jsx'
 
 function App() {
   const [kitaplar, setKitaplar] = useState([])
@@ -27,7 +29,10 @@ function App() {
     <>
       <section id="center">
         <div className="Liste">
+          <KitapArama />
           <AramaKutusu />
+          <AramaFormu />
+
           <KitapListesi kitaplar={kitaplar} yukleniyor={yukleniyor} />
         </div>
       </section>

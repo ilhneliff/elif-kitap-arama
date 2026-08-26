@@ -1,3 +1,4 @@
+import { useState } from 'react'
 function AramaFormu() {
     const [sorgu, setSorgu] = useState('')
 
