@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hafta 6 — Beyinsize Anlatır Gibi React Rehberi</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 50px;
+      font-size: 1rem;
+    }
+
+    /* Gun kartlari */
+    .gun {
+      margin-bottom: 60px;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .gun-baslik {
+      padding: 20px 28px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .gun-1 .gun-baslik { background: linear-gradient(135deg, #4d96ff, #3b5998); }
+    .gun-2 .gun-baslik { background: linear-gradient(135deg, #6bcb77, #2d8f4e); }
+    .gun-3 .gun-baslik { background: linear-gradient(135deg, #ff6b6b, #c0392b); }
+    .gun-4 .gun-baslik { background: linear-gradient(135deg, #ffd93d, #f39c12); color: #1a1a2e; }
+
+    .gun-icerik {
+      background: #1a1a2e;
+      padding: 28px;
+      border: 1px solid #2a2a4a;
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+    }
+
+    h3 {
+      color: #ffd93d;
+      margin: 28px 0 12px;
+      font-size: 1.15rem;
+    }
+
+    .gun-icerik h3:first-child {
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 14px;
+    }
+
+    /* Benzetme kutulari */
+    .benzetme {
+      background: #252545;
+      border-left: 4px solid #ffd93d;
+      padding: 18px 22px;
+      margin: 18px 0;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .benzetme-baslik {
+      font-weight: 700;
+      color: #ffd93d;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    /* Kod bloklari */
+    pre {
+      background: #0d0d1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+      color: #a8d8ea;
+    }
+
+    .comment { color: #6a6a8a; }
+    .keyword { color: #c792ea; }
+    .string { color: #c3e88d; }
+    .func { color: #82aaff; }
+    .tag { color: #ff6b6b; }
+    .attr { color: #ffcb6b; }
+    .param { color: #f78c6c; }
+
+    /* Onemli kutu */
+    .onemli {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 18px 0;
+    }
+
+    .onemli-baslik {
+      color: #ff6b6b;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    /* Adim listesi */
+    .adimlar {
+      counter-reset: adim;
+      list-style: none;
+      padding: 0;
+    }
+
+    .adimlar li {
+      counter-increment: adim;
+      padding: 12px 0 12px 50px;
+      position: relative;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    .adimlar li:last-child { border-bottom: none; }
+
+    .adimlar li::before {
+      content: counter(adim);
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 34px;
+      height: 34px;
+      background: #4d96ff;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Ozet kutusu */
+    .ozet {
+      background: linear-gradient(135deg, rgba(77, 150, 255, 0.1), rgba(107, 203, 119, 0.1));
+      border: 1px solid rgba(77, 150, 255, 0.3);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 20px 0 0;
+    }
+
+    .ozet-baslik {
+      color: #4d96ff;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* Karsilastirma */
+    .karsilastirma {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .yanlis, .dogru {
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+    }
+
+    .yanlis {
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+    }
+
+    .dogru {
+      background: rgba(107, 203, 119, 0.08);
+      border: 1px solid rgba(107, 203, 119, 0.25);
+    }
+
+    .yanlis-baslik { color: #ff6b6b; font-weight: 700; margin-bottom: 6px; }
+    .dogru-baslik { color: #6bcb77; font-weight: 700; margin-bottom: 6px; }
+
+    .inline-code {
+      background: #252545;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      color: #a8d8ea;
+    }
+
+    /* Soru cevap */
+    .soru {
+      background: #252545;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 14px 0;
+    }
+
+    .soru-baslik {
+      color: #82aaff;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .karsilastirma { grid-template-columns: 1fr; }
+      h1 { font-size: 1.6rem; }
+      .container { padding: 20px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <h1>Hafta 6 — React Rehberi</h1>
+    <p class="subtitle">Beyinsize anlatir gibi, gunluk dille, bolca benzetmeyle.</p>
+
+    <!-- ==================== GUN 1 ==================== -->
+    <div class="gun gun-1">
+      <div class="gun-baslik">Gun 1 — useEffect: Bilesen Yuklenince Veri Cek</div>
+      <div class="gun-icerik">
+
+        <h3>useEffect ne is yapar?</h3>
+        <p>
+          React'te bir bilesen (component) ekrana cizildiginde, bazen "ekstra isler" yapman gerekir.
+          Mesela: internetten veri cekmek, bir zamanlayici kurmak, sayfa basligini degistirmek...
+          Bunlara <strong>"yan etki" (side effect)</strong> deniyor.
+        </p>
+        <p>
+          <span class="inline-code">useEffect</span> React'e soyle diyor:
+          <em>"Bu bilesen ekrana geldiginde (ya da bir sey degistiginde) su isi de yap."</em>
+        </p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Restoran garsonunu dusun</div>
+          <p>
+            Sen bir masaya oturdun (bilesen ekrana geldi). Garson sana menu getiriyor (useEffect calisti).
+            Garson menuleri sadece sen masaya ILCE oturdugun anda getiriyor, her nefes aldiginda degil.
+            Iste <span class="inline-code">useEffect(() => {...}, [])</span> tam olarak bu:
+            "Bilesen ilk kez ekrana geldiginde bir kere calis, sonra rahat birak."
+          </p>
+        </div>
+
+        <h3>Kod ne yapiyor, satir satir?</h3>
+<pre><code><span class="keyword">import</span> { <span class="func">useEffect</span>, <span class="func">useState</span> } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="func">KitapListesi</span>() {
+  <span class="comment">// 1. Bos bir liste olustur (baslangicta hic kitap yok)</span>
+  <span class="keyword">const</span> [kitaplar, setKitaplar] = <span class="func">useState</span>([])
+
+  <span class="comment">// 2. Bilesen ekrana gelince su isi yap:</span>
+  <span class="func">useEffect</span>(() => {
+
+    <span class="comment">// 3. Internetten veri ceken bir fonksiyon tanimla</span>
+    <span class="keyword">async function</span> <span class="func">kitaplariGetir</span>() {
+      <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="func">fetch</span>(<span class="string">'https://openlibrary.org/search.json?q=harry+potter&limit=5'</span>)
+      <span class="keyword">const</span> veri = <span class="keyword">await</span> res.<span class="func">json</span>()
+      <span class="comment">// 4. Gelen veriyi state'e koy (liste artik dolu!)</span>
+      <span class="func">setKitaplar</span>(veri.docs)
+    }
+
+    <span class="comment">// 5. O fonksiyonu hemen cagir</span>
+    <span class="func">kitaplariGetir</span>()
+
+  }, [])  <span class="comment">// &lt;-- BOS DIZI: "sadece bir kere calis" demek</span>
+
+  <span class="comment">// 6. Kitaplari ekranda goster</span>
+  <span class="keyword">return</span> (
+    &lt;<span class="tag">ul</span>&gt;
+      {kitaplar.<span class="func">map</span>((k) => (
+        &lt;<span class="tag">li</span> <span class="attr">key</span>={k.key}&gt;{k.title}&lt;/<span class="tag">li</span>&gt;
+      ))}
+    &lt;/<span class="tag">ul</span>&gt;
+  )
+}</code></pre>
+
+        <h3>Peki neden fonksiyonu icinde tanimliyoruz?</h3>
+        <p>
+          React'in bir kurali var: <span class="inline-code">useEffect</span>'e verdigin fonksiyon
+          <strong>dogrudan async olamaz</strong>. Yani su YANLIS:
+        </p>
+<pre><code><span class="comment">// YANLIS — bunu yapma</span>
+<span class="func">useEffect</span>(<span class="keyword">async</span> () => {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="func">fetch</span>(...)
+}, [])</code></pre>
+        <p>
+          Cozum: icerde ayri bir async fonksiyon tanimla, sonra hemen cagir. Dusun ki
+          useEffect sana "is yap" diyor ama "async is" istemiyor. Sen de icerde bir yardimci
+          cagiriyorsun, o yardimci async olabiliyor.
+        </p>
+
+        <h3>Bagimlilik dizisi (ikinci parametre) ne demek?</h3>
+        <p>useEffect'in ikinci parametresi olan dizi, React'e "bu efekti NE ZAMAN tekrar calistir" sorusunun cevabini verir.</p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Alarm kurmayi dusun</div>
+          <p>
+            <strong><span class="inline-code">[]</span> (bos dizi):</strong> "Sadece sabah ilk uyandirdiginda cal" — bir kere calar, biter.<br>
+            <strong><span class="inline-code">[sorgu]</span>:</strong> "Sorgu her degistiginde cal" — sorgu degistikce tekrar tekrar calar.<br>
+            <strong>Dizi yok:</strong> "HER saniye cal" — surekli calar, deli eder (genelde istemezsin).
+          </p>
+        </div>
+
+        <div class="karsilastirma">
+          <div class="yanlis">
+            <div class="yanlis-baslik">Dizi yok — tehlike!</div>
+<pre><code><span class="func">useEffect</span>(() => {
+  <span class="func">fetch</span>(...)
+})
+<span class="comment">// HER render'da calisir
+// Sonsuz donguye girebilir!</span></code></pre>
+          </div>
+          <div class="dogru">
+            <div class="dogru-baslik">Bos dizi — guvenli</div>
+<pre><code><span class="func">useEffect</span>(() => {
+  <span class="func">fetch</span>(...)
+}, [])
+<span class="comment">// Sadece 1 kere calisir
+// Tam istedigimiz sey</span></code></pre>
+          </div>
+        </div>
+
+        <div class="ozet">
+          <div class="ozet-baslik">Gun 1 Ozet</div>
+          <p>
+            <span class="inline-code">useEffect</span> = "bilesen ekrana gelince su isi yap."
+            Ikinci parametre bos dizi <span class="inline-code">[]</span> verirsen sadece bir kere calisir.
+            Icinde <span class="inline-code">fetch</span> ile internetten veri cekersin,
+            <span class="inline-code">useState</span> ile o veriyi tutarsin.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== GUN 2 ==================== -->
+    <div class="gun gun-2">
+      <div class="gun-baslik">Gun 2 — Controlled Form: Kullanicidan Girdi Alma</div>
+      <div class="gun-icerik">
+
+        <h3>Controlled component ne demek?</h3>
+        <p>
+          Normal HTML'de bir <span class="inline-code">&lt;input&gt;</span> kutusu kendi degerini
+          kendi tutar — tarayici yonetir. Ama React'te biz diyoruz ki:
+          <em>"Hayir, input'un degerini BEN yonetirim, state'imde tutarim."</em>
+          Buna <strong>controlled component</strong> (kontrollu bilesen) deniyor.
+        </p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Kukla tiyatrosu</div>
+          <p>
+            Normal input = kukla kendi basina hareket ediyor, sen sadece seyrediyorsun.<br>
+            Controlled input = kuklayi SEN oynatiyorsun ipleriyle. Her hareketi sen kontrol ediyorsun.
+            <br><br>
+            <strong>Ipler ne?</strong><br>
+            <span class="inline-code">value={sorgu}</span> = "input'un gosterdigi sey benim state'imden gelsin"<br>
+            <span class="inline-code">onChange</span> = "kullanici bir tus basinca bana haber ver, state'i guncelleyeyim"
+          </p>
+        </div>
+
+<pre><code><span class="keyword">function</span> <span class="func">AramaKutusu</span>() {
+  <span class="comment">// "sorgu" diye bir state tut, baslangicta bos string</span>
+  <span class="keyword">const</span> [sorgu, setSorgu] = <span class="func">useState</span>(<span class="string">''</span>)
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag">input</span>
+      <span class="attr">value</span>={sorgu}                              <span class="comment">// input ne gostersin? state'teki degeri</span>
+      <span class="attr">onChange</span>={(e) => <span class="func">setSorgu</span>(e.target.value)}  <span class="comment">// tus basinca state'i guncelle</span>
+      <span class="attr">placeholder</span>=<span class="string">"Kitap ara..."</span>
+    /&gt;
+  )
+}</code></pre>
+
+        <h3>Bu dongu nasil calisiyor?</h3>
+        <ol class="adimlar">
+          <li>Kullanici klavyede "H" tusuna basar</li>
+          <li><span class="inline-code">onChange</span> tetiklenir, <span class="inline-code">e.target.value</span> = "H"</li>
+          <li><span class="inline-code">setSorgu("H")</span> cagirilir — state artik "H"</li>
+          <li>React bileseni yeniden cizer, input artik "H" gosteriyor</li>
+          <li>Kullanici "a" basar, ayni dongu: state "Ha" olur, input "Ha" gosterir...</li>
+        </ol>
+
+        <div class="soru">
+          <div class="soru-baslik">Peki neden boyle yapiyoruz? Input zaten kendi degerini tutuyor, neden React'e verelim?</div>
+          <p>
+            Cunku state'te tutunca degeri PROGRAMATIK olarak da degistirebilirsin!
+            Mesela bir "Temizle" butonu eklersin:
+            <span class="inline-code">&lt;button onClick={() => setSorgu('')}&gt;Temizle&lt;/button&gt;</span>
+            — butona tikla, input bos olsun. Normal HTML input'ta bunu yapmak cok daha zor.
+          </p>
+        </div>
+
+        <h3>Form submit ve e.preventDefault()</h3>
+        <p>
+          HTML'de bir form'un icindeki butona basinca ya da input'ta Enter'a basinca
+          tarayicinin VARSAYILAN davranisi sayfayi <strong>komple yenilemek</strong>tir.
+          React'te sayfa yenilenirse tum state kaybolur — felaket!
+        </p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Kapinin otomatik kapanmasini engellemek</div>
+          <p>
+            Bir kapidan gecerken kapi otomatik kapaniyor (tarayicinin varsayilan davranisi = sayfayi yenile).
+            Sen kapinin onune ayagini koyuyorsun: "dur, kapanma!" diyorsun.
+            <span class="inline-code">e.preventDefault()</span> = ayagini kapinin onune koymak.
+            "Tarayici, senin varsayilan davranisini (sayfayi yenilemeyi) ENGELLE."
+          </p>
+        </div>
+
+<pre><code><span class="keyword">const</span> <span class="func">gonderildi</span> = (e) => {
+  e.<span class="func">preventDefault</span>()  <span class="comment">// sayfayi yenileme!</span>
+  console.<span class="func">log</span>(<span class="string">'Aranan:'</span>, sorgu) <span class="comment">// artik state kaybolmadan isini yapabilirsin</span>
+}
+
+<span class="keyword">return</span> (
+  &lt;<span class="tag">form</span> <span class="attr">onSubmit</span>={gonderildi}&gt;
+    &lt;<span class="tag">input</span> <span class="attr">value</span>={sorgu} <span class="attr">onChange</span>={(e) => <span class="func">setSorgu</span>(e.target.value)} /&gt;
+    &lt;<span class="tag">button</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;Ara&lt;/<span class="tag">button</span>&gt;
+  &lt;/<span class="tag">form</span>&gt;
+)</code></pre>
+
+        <div class="ozet">
+          <div class="ozet-baslik">Gun 2 Ozet</div>
+          <p>
+            Controlled input = input'un degerini state'te tutmak.
+            <span class="inline-code">value={state}</span> + <span class="inline-code">onChange={guncelle}</span> ikilisi.
+            Form submit'te <span class="inline-code">e.preventDefault()</span> ile sayfanin yenilenmesini engelle.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== GUN 3 ==================== -->
+    <div class="gun gun-3">
+      <div class="gun-baslik">Gun 3 — Durum Render: Loading / Bos / Hata</div>
+      <div class="gun-icerik">
+
+        <h3>Neden 3 ayri durum var?</h3>
+        <p>
+          Internetten veri cektigin zaman her sey hep guzel gitmez.
+          Uc sey olabilir:
+        </p>
+        <ol class="adimlar">
+          <li><strong>Veri henuz gelmedi</strong> — internet yavas, sunucu dusunuyor. Kullaniciya "yukleniyor" de.</li>
+          <li><strong>Bir hata oldu</strong> — internet koptu, sunucu coktu. Kullaniciya "hata oldu" de.</li>
+          <li><strong>Veri geldi ama bos</strong> — arama sonucu yok. Kullaniciya "sonuc bulunamadi" de.</li>
+        </ol>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Kargo takibi</div>
+          <p>
+            Internetten bir sey siparis ettin. Kargo takip sayfasi sana 3 farkli mesaj gosterebilir:<br>
+            <strong>"Kargonuz yolda"</strong> = yukleniyor (loading)<br>
+            <strong>"Kargo kayboldu"</strong> = hata (error)<br>
+            <strong>"Bu siparis numarasina ait kargo bulunamadi"</strong> = bos (empty)<br><br>
+            Eger kargo takip sayfasi bu 3 durumu GOSTERMESEYDI, sen sadece bos beyaz ekrana bakip
+            "site bozuk mu, kargom kayip mi, ne oluyor?" diye dusunurdun. KOTU deneyim.
+          </p>
+        </div>
+
+        <h3>3 state ile 3 durumu yonetmek</h3>
+<pre><code><span class="keyword">const</span> [sonuclar, setSonuclar] = <span class="func">useState</span>([])       <span class="comment">// sonuclar listesi</span>
+<span class="keyword">const</span> [yukleniyor, setYukleniyor] = <span class="func">useState</span>(<span class="keyword">false</span>) <span class="comment">// yukleniyor mu?</span>
+<span class="keyword">const</span> [hata, setHata] = <span class="func">useState</span>(<span class="keyword">null</span>)              <span class="comment">// hata var mi?</span></code></pre>
+
+        <h3>try / catch / finally ne demek?</h3>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Yumurta kirmak</div>
+          <p>
+            <strong>try</strong> = "yumurtayi kirmayi DENE" — her sey yolunda gidebilir<br>
+            <strong>catch</strong> = "eger yumurta yere duserse, YAKALA ve temizle" — hata olursa ne yapacagini soyle<br>
+            <strong>finally</strong> = "yumurta kirilsa da kirilmasa da, sonunda ellerini YIKA" — ne olursa olsun calisir
+          </p>
+        </div>
+
+<pre><code><span class="keyword">const</span> <span class="func">ara</span> = <span class="keyword">async</span> (sorgu) => {
+  <span class="func">setYukleniyor</span>(<span class="keyword">true</span>)   <span class="comment">// "yukleniyor" moduna gec</span>
+  <span class="func">setHata</span>(<span class="keyword">null</span>)          <span class="comment">// onceki hatayi temizle</span>
+
+  <span class="keyword">try</span> {
+    <span class="comment">// internetten veri cekmeyi DENE</span>
+    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="func">fetch</span>(<span class="string">`https://openlibrary.org/search.json?q=${sorgu}&limit=10`</span>)
+    <span class="keyword">if</span> (!res.ok) <span class="keyword">throw new</span> <span class="func">Error</span>(<span class="string">'Sunucu hatasi'</span>)
+    <span class="keyword">const</span> veri = <span class="keyword">await</span> res.<span class="func">json</span>()
+    <span class="func">setSonuclar</span>(veri.docs) <span class="comment">// basarili! sonuclari kaydet</span>
+
+  } <span class="keyword">catch</span> (err) {
+    <span class="comment">// bir sey ters giderse hatayi YAKALA</span>
+    <span class="func">setHata</span>(err.message)
+
+  } <span class="keyword">finally</span> {
+    <span class="comment">// basarili da olsa, hata da olsa: yukleme BITTI</span>
+    <span class="func">setYukleniyor</span>(<span class="keyword">false</span>)
+  }
+}</code></pre>
+
+        <h3>Ekranda hangi durumu gosterecegiz?</h3>
+        <p>
+          Sirayla kontrol et: ilk eslesen durumu goster, gerisini gosterme.
+        </p>
+<pre><code><span class="comment">// Her kontrolde: eger bu durum gecerliyse, sadece BUNU goster ve dur</span>
+
+{yukleniyor && &lt;<span class="tag">p</span>&gt;Yukleniyor...&lt;/<span class="tag">p</span>&gt;}
+{hata && &lt;<span class="tag">p</span>&gt;Hata: {hata}&lt;/<span class="tag">p</span>&gt;}
+{!yukleniyor && !hata && sonuclar.length === 0 && &lt;<span class="tag">p</span>&gt;Henuz sonuc yok.&lt;/<span class="tag">p</span>&gt;}
+
+<span class="comment">// Hicbiri degilse: sonuclari listele</span>
+&lt;<span class="tag">ul</span>&gt;
+  {sonuclar.<span class="func">map</span>((k) => &lt;<span class="tag">li</span> <span class="attr">key</span>={k.key}&gt;{k.title}&lt;/<span class="tag">li</span>&gt;)}
+&lt;/<span class="tag">ul</span>&gt;</code></pre>
+
+        <div class="soru">
+          <div class="soru-baslik">Sira neden onemli?</div>
+          <p>
+            Yukleniyor'u en basta kontrol etmezsen, yukleme sirasinda hem "yukleniyor" hem
+            "henuz sonuc yok" mesajlari ayni anda gorulur — cunku yukleme sirasinda sonuclar
+            dizisi hala bos! Once yukleniyor'u kontrol edersen, diger kontrollere hic girmez.
+          </p>
+        </div>
+
+        <div class="ozet">
+          <div class="ozet-baslik">Gun 3 Ozet</div>
+          <p>
+            Internetten veri cekerken 3 durum olabilir: yukleniyor, hata, bos.
+            Her biri icin ayri state tut, ekranda sirayla kontrol edip dogru mesaji goster.
+            <span class="inline-code">try/catch/finally</span> ile hem basarili hem basarisiz senaryolari yonet.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== GUN 4 ==================== -->
+    <div class="gun gun-4">
+      <div class="gun-baslik">Gun 4 — Lifting State Up: State Nerede Yasamali?</div>
+      <div class="gun-icerik">
+
+        <h3>Sorun ne?</h3>
+        <p>
+          Diyelim iki bilesen var: <span class="inline-code">AramaKutusu</span> (kullanicinin yazdigi yer)
+          ve <span class="inline-code">SonucListesi</span> (sonuclari gosteren yer).
+          Ikisi de <strong>ayni veriye</strong> ihtiyac duyuyor — mesela arama sorgusu.
+        </p>
+        <p>
+          Ama React'te kardes bilesenler birbirinin state'ine ERISEMEZ.
+          AramaKutusu'nun icindeki <span class="inline-code">sorgu</span>'yu SonucListesi goremez.
+        </p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Iki oda arasinda mesaj gondermek</div>
+          <p>
+            Iki kardes oda dusun, arada duvar var. Sol odadaki kisi (AramaKutusu) bir sey yaziyor,
+            sag odadaki kisi (SonucListesi) o yaziyi gormek istiyor. Ama duvar var, goremez!
+            <br><br>
+            <strong>Cozum:</strong> Yaziyi odalardan birine degil, <strong>koridora</strong> (ortak alan = App)
+            koy. Iki oda da koridora bakabilir. Koridordaki yazi degisince iki oda da gorur.
+            <br><br>
+            Iste bu "yaziyi koridora tasima" islemine <strong>lifting state up</strong> deniyor.
+          </p>
+        </div>
+
+        <h3>Yanlis yaklasim</h3>
+<pre><code><span class="comment">// YANLIS: sorgu AramaKutusu'nun ICINDE hapsolmus</span>
+<span class="comment">// SonucListesi bu veriye ERISEMEZ</span>
+
+<span class="keyword">function</span> <span class="func">AramaKutusu</span>() {
+  <span class="keyword">const</span> [sorgu, setSorgu] = <span class="func">useState</span>(<span class="string">''</span>)  <span class="comment">// state BURADA</span>
+  <span class="keyword">return</span> &lt;<span class="tag">input</span> <span class="attr">value</span>={sorgu} ... /&gt;
+}
+
+<span class="keyword">function</span> <span class="func">SonucListesi</span>() {
+  <span class="comment">// sorgu'ya nasil ulasacagim?? YOLU YOK!</span>
+  <span class="keyword">return</span> &lt;<span class="tag">p</span>&gt;???&lt;/<span class="tag">p</span>&gt;
+}</code></pre>
+
+        <h3>Dogru yaklasim: State'i yukari tasi</h3>
+<pre><code><span class="comment">// DOGRU: state en yakin ortak atada (App)</span>
+<span class="comment">// Cocuklara props ile gecir</span>
+
+<span class="keyword">function</span> <span class="func">App</span>() {
+  <span class="keyword">const</span> [sorgu, setSorgu] = <span class="func">useState</span>(<span class="string">''</span>)  <span class="comment">// state BURADA, yukaridsa</span>
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag">div</span>&gt;
+      <span class="comment">{/* AramaKutusu'na state'i degistirme gucu ver */}</span>
+      &lt;<span class="func">AramaKutusu</span> <span class="attr">sorgu</span>={sorgu} <span class="attr">setSorgu</span>={setSorgu} /&gt;
+
+      <span class="comment">{/* SonucListesi'ne state'i okuma gucu ver */}</span>
+      &lt;<span class="func">SonucListesi</span> <span class="attr">sorgu</span>={sorgu} /&gt;
+    &lt;/<span class="tag">div</span>&gt;
+  )
+}
+
+<span class="comment">// AramaKutusu artik KENDI state'i yok, props ile aliyor</span>
+<span class="keyword">function</span> <span class="func">AramaKutusu</span>({ sorgu, setSorgu }) {
+  <span class="keyword">return</span> &lt;<span class="tag">input</span> <span class="attr">value</span>={sorgu} <span class="attr">onChange</span>={(e) => <span class="func">setSorgu</span>(e.target.value)} /&gt;
+}
+
+<span class="comment">// SonucListesi de props ile aliyor</span>
+<span class="keyword">function</span> <span class="func">SonucListesi</span>({ sorgu }) {
+  <span class="keyword">return</span> &lt;<span class="tag">p</span>&gt;Aranan: {sorgu}&lt;/<span class="tag">p</span>&gt;
+}</code></pre>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Aile borcesi</div>
+          <p>
+            Dusun ki aile toplantisinda yemek <strong>kim</strong> siparis edecek?
+            <br><br>
+            <strong>Yanlis:</strong> Her cocuk kendi basina farkli restoran ariyor.
+            Biri pizza, biri sushi siparis ediyor. Kaos!
+            <br><br>
+            <strong>Dogru:</strong> Anne/baba (App) karar veriyor: "Pizza yiyecegiz."
+            Bir cocuga (AramaKutusu) siparis verme gorevi verir,
+            diger cocuga (SonucListesi) "pizza geldi, masayi kur" der.
+            Karar TEK bir yerde, herkes oradan ogreniyor.
+          </p>
+        </div>
+
+        <h3>Senin projen nasil olmali?</h3>
+        <p>Tam olarak bu yapi:</p>
+<pre><code><span class="keyword">function</span> <span class="func">App</span>() {
+  <span class="comment">// TUM state'ler burada</span>
+  <span class="keyword">const</span> [sorgu, setSorgu] = <span class="func">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> [sonuclar, setSonuclar] = <span class="func">useState</span>([])
+  <span class="keyword">const</span> [yukleniyor, setYukleniyor] = <span class="func">useState</span>(<span class="keyword">false</span>)
+  <span class="keyword">const</span> [hata, setHata] = <span class="func">useState</span>(<span class="keyword">null</span>)
+
+  <span class="comment">// Arama fonksiyonu da burada</span>
+  <span class="keyword">const</span> <span class="func">ara</span> = <span class="keyword">async</span> (sorgu) => { ... }
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag">div</span>&gt;
+      <span class="comment">{/* AramaKutusu: sorgu'yu DEGISTIRME gucu + arama tetikleme */}</span>
+      &lt;<span class="func">AramaKutusu</span> <span class="attr">sorgu</span>={sorgu} <span class="attr">setSorgu</span>={setSorgu} <span class="attr">aramaYap</span>={ara} /&gt;
+
+      <span class="comment">{/* SonucListesi: sonuclari GOSTERME gorevi */}</span>
+      &lt;<span class="func">SonucListesi</span> <span class="attr">sonuclar</span>={sonuclar} <span class="attr">yukleniyor</span>={yukleniyor} <span class="attr">hata</span>={hata} /&gt;
+    &lt;/<span class="tag">div</span>&gt;
+  )
+}</code></pre>
+
+        <h3>Props drilling ne?</h3>
+        <p>
+          State'i yukari tasiyinca veriyi cocuklara <strong>props ile gecirmek zorundasin</strong>.
+          Eger bilesenler cok ic ice gecmisse (buyuk buyuk ata → ata → ebeveyn → cocuk),
+          veri her seviyeden geciyor — buna <strong>props drilling</strong> deniyor.
+        </p>
+
+        <div class="benzetme">
+          <div class="benzetme-baslik">Benzetme: Fisildama oyunu</div>
+          <p>
+            Siraya dizilmis 5 kisi var. Ilk kisi bir mesaj soyluyor, ikinci kisiye fisildatiyor,
+            o ucuncuye, o dorduncuye... ta ki mesaj son kisiye ulasana kadar. Aradaki kisiler mesaji
+            KULLANMIYOR, sadece aktariyor. Bu biraz zahmetli ama 2-3 kisi icin sorun degil.
+            5-6 kisiyi gecerse daha iyi yontemler var (useContext gibi — ileride ogreneceksin).
+          </p>
+        </div>
+
+        <div class="onemli">
+          <div class="onemli-baslik">Altin kural</div>
+          <p>
+            "Iki bilesen ayni veriye ihtiyac duyuyorsa, o veriyi ikisinin de
+            <strong>ortak atasinda</strong> tut."
+            <br><br>
+            State yukari cikar, props asagi iner. Her zaman. Bu kadar.
+          </p>
+        </div>
+
+        <div class="ozet">
+          <div class="ozet-baslik">Gun 4 Ozet</div>
+          <p>
+            Kardes bilesenler birbirinin state'ine erisemez. Cozum: state'i en yakin ortak ataya tasi
+            (lifting state up), cocuklara props ile gec. AramaKutusu state'i degistirir, SonucListesi
+            okur — ikisi de App'teki tek dogruluk kaynagina bagli.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
