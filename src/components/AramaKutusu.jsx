@@ -1,18 +1,11 @@
-import { useState } from 'react'
-
+// ❌ YANLIŞ: sorgu state'i AramaKutusu içinde hapsolmuş,
+// SonucListesi bu veriye hiç ulaşamıyor
 function AramaKutusu() {
     const [sorgu, setSorgu] = useState('')
-
-    return (
-        <div className="arama-kutusu">
-            <input
-                type="text"
-                value={sorgu}
-                onChange={(e) => setSorgu(e.target.value)}
-                placeholder="Kitap ara..."
-            />
-            <button onClick={() => setSorgu('')}>Temizle</button>
-        </div>
-    )
+    return <input value={sorgu} onChange={(e) => setSorgu(e.target.value)} />
 }
-    export default AramaKutusu
+
+function SonucListesi() {
+    // sorgu'ya buradan erişimin YOK — bu iki bileşen birbirinden habersiz
+    return <p>???</p>
+}
