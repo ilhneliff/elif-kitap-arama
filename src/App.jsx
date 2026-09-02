@@ -33,18 +33,13 @@ function App() {
       e.preventDefault()
       aramaYap(sorgu)
     }
-    return (
-      <form onSubmit={gonderildi}>
-        <input value={sorgu} onChange={(e) => setSorgu(e.target.value)} />
-        <button type="submit">Ara</button>
-      </form>
-    )
+
   }
 
   function SonucListesi({ sonuclar, yukleniyor, hata }) {
     if (yukleniyor) return <p>Yükleniyor...</p>
     if (hata) return <p>Hata: {hata}</p>
-    if (sonuclar.length === 0) return <p>Henüz sonuç yok.</p>
+    
     return (
       <ul>
         {sonuclar.map((k) => <li key={k.key}>{k.title}</li>)}
